@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Tie::Array;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 sub TIEARRAY
@@ -60,6 +60,16 @@ sub FETCHKEY
     $i = 0 if ( $i < 0 );
     no integer;
     ( $i * $_[0]->{ _step } ) + $_[0]->{ _base };
+}
+
+
+sub FETCHKEYCAVITY
+{
+    use integer;
+    my $i = ( ($_[1] || 0 ) * $_[0]->{ _step } ) + $_[0]->{ _base };
+    $i = 0 if ( $i < 0 );
+    no integer;
+    $i;
 }
 
 
@@ -142,8 +152,6 @@ sub SPLICECAVITY
     my $sz = $self->FETCHSIZE;
     $off += $sz if $off < 0;
     my $len = @_ ? shift : $sz - $off;
-    my $l = ( $len - $b ) / $s;
-    $l = 0 if ( $l < 0 );
     no integer;
     return splice( $self->{ _data }, $off, $len, @_ );
 
@@ -167,13 +175,14 @@ sub SPLICE
 __END__
 
 =pod
-head1 NAME
+
+=head1 NAME
 
 Tie::Array::Cavity - create an array where key are aggregated by step ( and optionally could start with an offset )
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -278,6 +287,11 @@ object I<this>. But the index is calculated with the cavity feature.
 =head2 FETCHKEY this , index
 
 Return the calculated real key used by the cavity feature.
+
+=head2 FETCHKEYCAVITY this , index
+
+Return the calculated cavity key related to a normal array index.
+
 
 =head2 FETCH  this , index
 

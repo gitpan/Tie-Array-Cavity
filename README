@@ -1,8 +1,9 @@
+NAME
     Tie::Array::Cavity - create an array where key are aggregated by step (
     and optionally could start with an offset )
 
 VERSION
-    Version 0.01
+    Version 0.02
 
 SYNOPSIS
     A Tie array module where the keys ( indexes ) are like a cavity bucket
@@ -90,6 +91,9 @@ SUBROUTINES/METHODS
 
   FETCHKEY this , index
     Return the calculated real key used by the cavity feature.
+
+  FETCHKEYCAVITY this , index
+    Return the calculated cavity key related to a normal array index.
 
   FETCH  this , index
     Retrieve the value in *index* for the tied array associated with object
